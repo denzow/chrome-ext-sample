@@ -39,7 +39,7 @@ module.exports = merge(baseWebpack, {
     }),
     new ZipPlugin({
       path: '..',
-      filename: 'extension.zip',
+      filename: 'extension.chrome.zip',
     }),
   ],
 });

@@ -14,7 +14,8 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack --config ./build/webpack.dev.js --hide-modules",
-    "build": "webpack --config ./build/webpack.prod.js --progress  --hide-modules --colors"
+    "chrome": "webpack --config ./build/webpack.chrome.js --progress  --hide-modules --colors",
+    "firefox": "webpack --config ./build/webpack.firefox.js --progress  --hide-modules --colors"
   },
   "devDependencies": {
     "axios": "^0.18.0",

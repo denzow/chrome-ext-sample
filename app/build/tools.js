@@ -1,6 +1,8 @@
 const { resolve } = require('path');
 const { extract } = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const _  = require('lodash');
+
 
 exports.htmlPage = (title, filename, chunks, template) => new HtmlWebpackPlugin({
   title,
@@ -55,4 +57,31 @@ exports.styleLoaders = (options) => {
     });
   }
   return output;
+};
+
+exports.chromeManifestToFox = (chromeManifest) => {
+  const foxManifest = _.cloneDeep(chromeManifest);
+  foxManifest.applications = {
+    gecko: {
+      id: `${chromeManifest.name}@${chromeManifest.author.replace(/[^a-z0-9-._]/ig, '_')}`,
+    }
+  };
+  if ('background' in foxManifest && 'persistent' in foxManifest.background) {
+    console.warn('background.persistent not supported Firefox');
+    delete foxManifest.background.persistent;
+  }
+  if ('options_page' in foxManifest) {
+    const option_page = foxManifest.options_page;
+    delete foxManifest.options_page;
+    foxManifest.options_ui = {
+      page: option_page,
+      open_in_tab: true,
+      browser_style: true,
+    };
+  }
+  if (foxManifest.permissions.includes('background')) {
+    console.warn('background permission not supported Firefox');
+    foxManifest.permissions = foxManifest.permissions.filter(x => x !== 'background');
+  }
+  return foxManifest;
 };
